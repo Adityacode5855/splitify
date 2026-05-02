@@ -10,6 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from werkzeug.exceptions import HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy.engine.url import make_url
 
 # Cloudinary imports moved to function to speed up Vercel startup
 
@@ -32,7 +33,30 @@ db_url = db_url.replace('"', '').replace("'", "")
 if db_url and db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = db_url or ("sqlite:///" + DATABASE_PATH.replace("\\", "/"))
+final_db_url = db_url or ("sqlite:///" + DATABASE_PATH.replace("\\", "/"))
+
+# Debug print (masked)
+if "postgresql" in final_db_url:
+    try:
+        parts = final_db_url.split("@")
+        masked = parts[0].split(":")[0] + ":***@" + parts[1]
+        print(f"DEBUG: Using Postgres URL: {masked}")
+    except:
+        print("DEBUG: Using Postgres URL (Could not mask)")
+else:
+    print(f"DEBUG: Using SQLite URL: {final_db_url}")
+
+app.config["SQLALCHEMY_DATABASE_URI"] = final_db_url
+
+# Final Validation
+try:
+    make_url(app.config["SQLALCHEMY_DATABASE_URI"])
+except Exception as e:
+    print(f"CRITICAL ERROR: SQLAlchemy cannot parse your DATABASE_URL! Error: {e}")
+    # Fallback to avoid crash
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///fallback.db"
+
+
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
