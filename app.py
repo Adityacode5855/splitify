@@ -160,25 +160,35 @@ def validate_email_password(email, password):
 
 
 def ensure_user_columns():
-    inspector_rows = db.session.execute(text("PRAGMA table_info(user)")).fetchall()
-    columns = {row[1] for row in inspector_rows}
-    if inspector_rows:
-        if "password_hash" not in columns:
-            db.session.execute(text("ALTER TABLE user ADD COLUMN password_hash VARCHAR(255)"))
-        if "profile_image" not in columns:
-            db.session.execute(text("ALTER TABLE user ADD COLUMN profile_image VARCHAR(255)"))
-        db.session.commit()
+    if "sqlite" not in str(db.engine.url).lower():
+        return # Skip for Postgres/other
+    try:
+        inspector_rows = db.session.execute(text("PRAGMA table_info(user)")).fetchall()
+        columns = {row[1] for row in inspector_rows}
+        if inspector_rows:
+            if "password_hash" not in columns:
+                db.session.execute(text("ALTER TABLE user ADD COLUMN password_hash VARCHAR(255)"))
+            if "profile_image" not in columns:
+                db.session.execute(text("ALTER TABLE user ADD COLUMN profile_image VARCHAR(255)"))
+            db.session.commit()
+    except Exception as e:
+        print(f"Migration Error (User): {e}")
 
 
 def ensure_expense_columns():
-    inspector_rows = db.session.execute(text("PRAGMA table_info(expense)")).fetchall()
-    columns = {row[1] for row in inspector_rows}
-    if inspector_rows:
-        if "split_type" not in columns:
-            db.session.execute(text("ALTER TABLE expense ADD COLUMN split_type VARCHAR(20) DEFAULT 'equal'"))
-        if "split_data" not in columns:
-            db.session.execute(text("ALTER TABLE expense ADD COLUMN split_data TEXT"))
-        db.session.commit()
+    if "sqlite" not in str(db.engine.url).lower():
+        return # Skip for Postgres/other
+    try:
+        inspector_rows = db.session.execute(text("PRAGMA table_info(expense)")).fetchall()
+        columns = {row[1] for row in inspector_rows}
+        if inspector_rows:
+            if "split_type" not in columns:
+                db.session.execute(text("ALTER TABLE expense ADD COLUMN split_type VARCHAR(20) DEFAULT 'equal'"))
+            if "split_data" not in columns:
+                db.session.execute(text("ALTER TABLE expense ADD COLUMN split_data TEXT"))
+            db.session.commit()
+    except Exception as e:
+        print(f"Migration Error (Expense): {e}")
 
 
 
@@ -724,10 +734,14 @@ def upload_profile_image():
 
 # --------------------------------
 
-with app.app_context():
-    db.create_all()
-    ensure_user_columns()
-    ensure_expense_columns()
+# --- Database Initialization ---
+try:
+    with app.app_context():
+        db.create_all()
+        ensure_user_columns()
+        ensure_expense_columns()
+except Exception as e:
+    print(f"Database Init Error: {e}")
 
 
 if __name__ == "__main__":
