@@ -22,11 +22,18 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "splitify-default-secret-key-123")
 
 # Support for Vercel/Production: Use DATABASE_URL if available
-db_url = os.environ.get("DATABASE_URL")
+db_url = os.environ.get("DATABASE_URL", "").strip()
+
+# Remove common copy-paste errors
+if db_url.startswith("DATABASE_URL="):
+    db_url = db_url.replace("DATABASE_URL=", "", 1)
+db_url = db_url.replace('"', '').replace("'", "")
+
 if db_url and db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = db_url or ("sqlite:///" + DATABASE_PATH.replace("\\", "/"))
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
