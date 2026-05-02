@@ -11,9 +11,7 @@ from sqlalchemy import text
 from werkzeug.exceptions import HTTPException
 from werkzeug.security import check_password_hash, generate_password_hash
 
-import cloudinary
-import cloudinary.uploader
-from cloudinary.utils import cloudinary_url
+# Cloudinary imports moved to function to speed up Vercel startup
 
 load_dotenv()
 
@@ -700,6 +698,8 @@ def upload_profile_image():
 
     # --- Cloudinary Upload (Recommended for Vercel) ---
     if os.environ.get("CLOUDINARY_URL"):
+        import cloudinary
+        import cloudinary.uploader
         try:
             upload_result = cloudinary.uploader.upload(
                 file,
@@ -734,14 +734,17 @@ def upload_profile_image():
 
 # --------------------------------
 
-# --- Database Initialization ---
-try:
-    with app.app_context():
-        db.create_all()
-        ensure_user_columns()
-        ensure_expense_columns()
-except Exception as e:
-    print(f"Database Init Error: {e}")
+# --- Database Initialization (Lazy) ---
+@app.before_request
+def initialize_database():
+    if not getattr(app, "_db_initialized", False):
+        try:
+            db.create_all()
+            ensure_user_columns()
+            ensure_expense_columns()
+            app._db_initialized = True
+        except Exception as e:
+            app.logger.error(f"Database Init Error: {e}")
 
 
 if __name__ == "__main__":
