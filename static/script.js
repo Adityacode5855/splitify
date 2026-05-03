@@ -102,17 +102,17 @@ function initCanvas() {
     const isDark = document.documentElement.getAttribute("data-theme") === "dark";
     if (isDark) {
       blobs = [
-        { x: W * 0.15, y: H * 0.25, r: 280, vx: 0.18, vy: 0.12, color: "rgba(37, 99, 235, 0.09)" },
-        { x: W * 0.75, y: H * 0.65, r: 340, vx: -0.14, vy: -0.1, color: "rgba(29, 78, 216, 0.07)" },
-        { x: W * 0.55, y: H * 0.2, r: 200, vx: 0.1, vy: 0.16, color: "rgba(37, 99, 235, 0.05)" },
-        { x: W * 0.3, y: H * 0.8, r: 260, vx: -0.12, vy: 0.08, color: "rgba(59, 130, 246, 0.04)" },
+        { x: W * 0.15, y: H * 0.25, r: 350, vx: 0.22, vy: 0.15, color: "rgba(124, 58, 237, 0.15)" }, // Violet
+        { x: W * 0.75, y: H * 0.65, r: 400, vx: -0.18, vy: -0.12, color: "rgba(30, 64, 175, 0.12)" }, // Blue
+        { x: W * 0.55, y: H * 0.2, r: 280, vx: 0.12, vy: 0.2, color: "rgba(16, 185, 129, 0.1)" }, // Emerald
+        { x: W * 0.3, y: H * 0.8, r: 320, vx: -0.15, vy: 0.1, color: "rgba(236, 72, 153, 0.1)" }, // Pink
       ];
     } else {
       blobs = [
-        { x: W * 0.15, y: H * 0.25, r: 280, vx: 0.18, vy: 0.12, color: "rgba(37, 99, 235, 0.12)" },
-        { x: W * 0.75, y: H * 0.65, r: 340, vx: -0.14, vy: -0.1, color: "rgba(29, 78, 216, 0.08)" },
-        { x: W * 0.55, y: H * 0.2, r: 200, vx: 0.1, vy: 0.16, color: "rgba(37, 99, 235, 0.06)" },
-        { x: W * 0.3, y: H * 0.8, r: 260, vx: -0.12, vy: 0.08, color: "rgba(59, 130, 246, 0.05)" },
+        { x: W * 0.15, y: H * 0.25, r: 350, vx: 0.22, vy: 0.15, color: "rgba(124, 58, 237, 0.18)" }, // Violet
+        { x: W * 0.75, y: H * 0.65, r: 400, vx: -0.18, vy: -0.12, color: "rgba(30, 64, 175, 0.14)" }, // Blue
+        { x: W * 0.55, y: H * 0.2, r: 280, vx: 0.12, vy: 0.2, color: "rgba(16, 185, 129, 0.12)" }, // Emerald
+        { x: W * 0.3, y: H * 0.8, r: 320, vx: -0.15, vy: 0.1, color: "rgba(236, 72, 153, 0.12)" }, // Pink
       ];
     }
   }
