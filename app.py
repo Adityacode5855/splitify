@@ -33,6 +33,10 @@ db_url = db_url.replace('"', '').replace("'", "")
 if db_url and db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
+# Fix for Vercel Serverless (Read-Only Filesystem)
+if not db_url and os.environ.get("VERCEL"):
+    DATABASE_PATH = "/tmp/database.db"
+
 final_db_url = db_url or ("sqlite:///" + DATABASE_PATH.replace("\\", "/"))
 
 # Debug print (masked)
