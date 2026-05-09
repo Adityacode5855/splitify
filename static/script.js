@@ -200,6 +200,14 @@ function initSaveHistory() {
   });
 }
 
+function toast(msg, type = "success") {
+  const t = $("toast");
+  if (!t) return;
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(() => t.classList.remove("show"), 3000);
+}
+
 function initLogin() {
   const loginBtn = $("login-btn");
   const emailIn = $("email");
@@ -212,7 +220,20 @@ function initLogin() {
   const overlay = $("auth-overlay");
   const closeBtn = $("auth-close");
   const backdrop = $("auth-backdrop");
+  const errorDiv = $("login-error");
   let mode = "login";
+
+  function showError(msg) {
+    if (!errorDiv) return;
+    errorDiv.textContent = msg;
+    errorDiv.classList.add("visible");
+  }
+
+  function clearError() {
+    if (!errorDiv) return;
+    errorDiv.textContent = "";
+    errorDiv.classList.remove("visible");
+  }
 
   // Open auth modal
   function openAuth(startMode) {
