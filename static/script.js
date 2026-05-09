@@ -143,6 +143,12 @@ function initCanvas() {
     requestAnimationFrame(draw);
   }
 
+  // Smooth scroll listener for landing nav
+  window.addEventListener("scroll", () => {
+    const nav = $("landing-nav");
+    if (nav) nav.classList.toggle("scrolled", window.scrollY > 20);
+  });
+
   resize();
   createBlobs();
   draw();
@@ -303,6 +309,10 @@ function initLogin() {
       setLoading(false);
     }
   }
+
+  // Wire up alt login button
+  const altLogin = $("nav-login-btn-alt");
+  if (altLogin) altLogin.addEventListener("click", () => openAuth("login"));
 }
 
 async function checkSession() {
@@ -359,7 +369,17 @@ function switchPanel(name) {
     b.classList.toggle("active", b.dataset.panel === name);
   });
   const target = $(`panel-${name}`);
-  if (target) target.classList.add("active");
+  if (target) {
+    target.classList.add("active");
+    // Animation trigger
+    target.style.opacity = "0";
+    target.style.transform = "translateY(10px)";
+    setTimeout(() => {
+        target.style.transition = "all 0.4s ease";
+        target.style.opacity = "1";
+        target.style.transform = "translateY(0)";
+    }, 10);
+  }
   if (name === "summary") renderSummaryGroupSelect();
 }
 
@@ -1072,8 +1092,47 @@ document.addEventListener("DOMContentLoaded", () => {
   initDashboardOverview();
   initGlobalHistory();
   initSettings();
+  initSpendingChart(); // New chart logic
   checkSession();
 });
+
+let spendingChart = null;
+function initSpendingChart() {
+    const ctx = document.getElementById('spending-chart');
+    if (!ctx) return;
+
+    const data = {
+        labels: ['Food', 'Rent', 'Travel', 'Bills', 'Others'],
+        datasets: [{
+            label: 'Spending',
+            data: [1200, 1900, 300, 500, 200],
+            backgroundColor: [
+                'rgba(37, 99, 235, 0.6)',
+                'rgba(16, 185, 129, 0.6)',
+                'rgba(245, 158, 11, 0.6)',
+                'rgba(239, 68, 68, 0.6)',
+                'rgba(148, 163, 184, 0.6)'
+            ],
+            borderColor: 'rgba(255, 255, 255, 0.2)',
+            borderWidth: 2,
+            hoverOffset: 10
+        }]
+    };
+
+    if (spendingChart) spendingChart.destroy();
+    spendingChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: data,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary') } }
+            },
+            cutout: '70%'
+        }
+    });
+}
 
 function renderUserAvatar(user) {
   const avatarElements = [
