@@ -33,10 +33,6 @@ db_url = db_url.replace('"', '').replace("'", "")
 if db_url and db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
 
-# Fix for Vercel Serverless (Read-Only Filesystem)
-if not db_url and os.environ.get("VERCEL"):
-    DATABASE_PATH = "/tmp/database.db"
-
 final_db_url = db_url or ("sqlite:///" + DATABASE_PATH.replace("\\", "/"))
 
 # Debug print (masked)
@@ -63,14 +59,6 @@ except Exception as e:
 
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# Postgres Connection Pooling Fix (for Neon/Serverless)
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_pre_ping": True,
-    "pool_recycle": 280,
-    "pool_size": 10,
-    "max_overflow": 20,
-}
 
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
 app.config["SESSION_COOKIE_HTTPONLY"] = True
