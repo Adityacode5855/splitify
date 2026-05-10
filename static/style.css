@@ -478,8 +478,14 @@ a { color: var(--blue); text-decoration: none; }
   position: relative;
   display: flex;
   width: 100%;
+  max-width: 1100px;
   height: 100%;
+  max-height: 700px;
   z-index: 2;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 100px rgba(139,92,246,0.1);
+  border: 1px solid rgba(255,255,255,0.06);
 }
 .auth-left {
   flex: 1;
