@@ -1895,3 +1895,96 @@ input:hover:not(:focus), select:hover:not(:focus) {
   .fin-top-nav { display: none; }
   .panel { padding: 1.5rem; }
 }
+
+/* ─── MOBILE APP & FINTECH LAYOUT ADJUSTMENTS ─── */
+@media(max-width: 900px) {
+  .fin-stats-grid { 
+    grid-template-columns: 1fr 1fr; 
+    gap: 1rem;
+  }
+  .fin-charts-grid, .fin-bottom-grid { 
+    grid-template-columns: 1fr; 
+  }
+  .fin-stat-card {
+    padding: 1rem;
+  }
+  .fin-stat-value {
+    font-size: 1.1rem;
+  }
+  .dash-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .dash-hero-actions {
+    width: 100%;
+  }
+  .dash-hero-actions button {
+    flex: 1;
+    justify-content: center;
+  }
+  
+  /* Make mobile nav look like a native app tab bar */
+  .mobile-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(11, 14, 23, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    justify-content: space-around;
+    padding: 0.5rem 0.5rem calc(0.5rem + env(safe-area-inset-bottom)) 0.5rem;
+    z-index: 100;
+  }
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    color: var(--text-3);
+    font-size: 0.7rem;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+  }
+  .mobile-nav-item svg {
+    margin-bottom: 2px;
+  }
+  .mobile-nav-item.active {
+    color: #f5a623;
+  }
+  .mobile-nav-item.active svg {
+    filter: drop-shadow(0 0 5px rgba(245, 166, 35, 0.5));
+  }
+  
+  /* Mobile header native app feel */
+  .mobile-header {
+    display: flex !important;
+    background: var(--bg);
+    padding: 1rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-logo .logo-mark {
+    background: linear-gradient(135deg, #f5a623, #fbbf24) !important;
+  }
+  .mobile-logo .logo-mark svg path:nth-child(1) { fill: #070B14; }
+  .mobile-logo .logo-mark svg path:nth-child(2) { stroke: #f5a623; }
+
+  /* Adjust panel spacing for mobile nav */
+  .panel {
+    padding-bottom: 6rem !important; /* Space for mobile nav */
+  }
+}
+
+@media(max-width: 400px) {
+  .fin-stats-grid { 
+    grid-template-columns: 1fr; /* Stack on very small screens */
+  }
+}
