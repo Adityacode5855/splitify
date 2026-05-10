@@ -103,65 +103,84 @@
     </div>
 
     <!-- ─── AUTH OVERLAY ─── -->
+    <!-- ─── AUTH OVERLAY (FULL-SCREEN SPLIT) ─── -->
     <div class="auth-overlay hidden" id="auth-overlay">
       <div class="auth-backdrop" id="auth-backdrop"></div>
-      <div class="auth-modal">
-        <button class="auth-close" id="auth-close" aria-label="Close">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-
-        <div class="login-logo">
-          <div class="logo-mark">
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-              <path d="M4 14C4 8.477 8.477 4 14 4s10 4.477 10 10-4.477 10-10 10S4 19.523 4 14z" fill="url(#lg1)"/>
-              <path d="M10 14h8M14 10v8" stroke="#0d0d14" stroke-width="2.2" stroke-linecap="round"/>
-              <defs><linearGradient id="lg1" x1="4" y1="4" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#3b82f6"/><stop offset="1" stop-color="#2563eb"/></linearGradient></defs>
-            </svg>
+      <div class="auth-split">
+        <!-- LEFT: Branding + Visual -->
+        <div class="auth-left">
+          <div class="auth-left-content">
+            <div class="login-logo">
+              <div class="logo-mark">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                  <path d="M4 14C4 8.477 8.477 4 14 4s10 4.477 10 10-4.477 10-10 10S4 19.523 4 14z" fill="url(#lg1)"/>
+                  <path d="M10 14h8M14 10v8" stroke="#0d0d14" stroke-width="2.2" stroke-linecap="round"/>
+                  <defs><linearGradient id="lg1" x1="4" y1="4" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#8b5cf6"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
+                </svg>
+              </div>
+              <span class="logo-text">Splitify<span class="logo-dot">.</span></span>
+            </div>
+            <h2 class="auth-hero-heading">Split expenses<br><span class="auth-hero-gradient">smarter</span> with anyone.</h2>
+            <p class="auth-hero-sub">Track balances, settle debts, and manage group expenses — all in one beautiful place.</p>
+            <div class="auth-trust-badges">
+              <span class="trust-badge">\ud83d\udd12 Secure</span>
+              <span class="trust-badge">\u26a1 Instant</span>
+              <span class="trust-badge">\ud83c\udf0d Free</span>
+            </div>
           </div>
-          <span class="logo-text">Splitify<span class="logo-dot">.</span></span>
+          <div class="auth-visual">
+            <div class="auth-rings">
+              <div class="auth-ring ar-1"></div>
+              <div class="auth-ring ar-2"></div>
+              <div class="auth-ring ar-3"></div>
+              <div class="auth-ring ar-4"></div>
+              <div class="auth-ring-core"></div>
+            </div>
+          </div>
+          <div class="auth-left-glow"></div>
         </div>
-
-        <h1 class="login-title" id="auth-title">Welcome back</h1>
-        <p class="login-sub" id="auth-sub">Sign in to continue splitting expenses.</p>
-
-        <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
-          <button class="auth-tab active" id="signin-tab" type="button">Sign in</button>
-          <button class="auth-tab" id="register-tab" type="button">Create account</button>
-        </div>
-
-        <div class="form-group hidden" id="name-group">
-          <label for="name">Full Name</label>
-          <input type="text" id="name" placeholder="Your full name" autocomplete="name" />
-        </div>
-
-        <div id="login-error" class="login-error" aria-live="polite"></div>
-
-        <div class="form-group">
-          <label for="email">Email Address</label>
-          <input type="email" id="email" placeholder="yourname@gmail.com" autocomplete="email" />
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <div class="password-wrap">
-            <input type="password" id="password" placeholder="••••••" autocomplete="current-password" />
-            <button class="toggle-pw" id="toggle-pw" tabindex="-1" aria-label="Show password">
-              <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-              </svg>
+        <!-- RIGHT: Form -->
+        <div class="auth-right">
+          <button class="auth-close" id="auth-close" aria-label="Close">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <div class="auth-form-inner">
+            <h1 class="login-title" id="auth-title">Welcome back</h1>
+            <p class="login-sub" id="auth-sub">Sign in to continue splitting expenses.</p>
+            <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+              <button class="auth-tab active" id="signin-tab" type="button">Sign in</button>
+              <button class="auth-tab" id="register-tab" type="button">Create account</button>
+            </div>
+            <div class="form-group hidden" id="name-group">
+              <label for="name">Full Name</label>
+              <input type="text" id="name" placeholder="Your full name" autocomplete="name" />
+            </div>
+            <div id="login-error" class="login-error" aria-live="polite"></div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="yourname@gmail.com" autocomplete="email" />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <div class="password-wrap">
+                <input type="password" id="password" placeholder="\u2022\u2022\u2022\u2022\u2022\u2022" autocomplete="current-password" />
+                <button class="toggle-pw" id="toggle-pw" tabindex="-1" aria-label="Show password">
+                  <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <label class="remember-row" for="remember-me">
+              <input type="checkbox" id="remember-me" />
+              <span>Remember me</span>
+            </label>
+            <button class="btn-primary" id="login-btn">
+              <span id="login-btn-text">Sign In</span>
+              <span id="login-spinner" class="spinner hidden"></span>
             </button>
           </div>
         </div>
-
-        <label class="remember-row" for="remember-me">
-          <input type="checkbox" id="remember-me" />
-          <span>Remember me</span>
-        </label>
-
-        <button class="btn-primary" id="login-btn">
-          <span id="login-btn-text">Sign In</span>
-          <span id="login-spinner" class="spinner hidden"></span>
-        </button>
       </div>
     </div>
   </section>
