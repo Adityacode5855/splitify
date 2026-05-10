@@ -39,30 +39,41 @@
   --transition:   0.25s cubic-bezier(0.4,0,0.2,1);
 }
 
-:root[data-theme="dark"] {
-  --bg:           #0a0a12;
-  --bg-2:         #0e0f1a;
-  --bg-3:         #161726;
-  --surface:      #13142a;
-  --surface-2:    #1a1b35;
-  --border:       rgba(255,255,255,0.06);
+:root[data-theme="light"] {
+  --bg:           #ffffff;
+  --bg-2:         #f8fafc;
+  --bg-3:         #f1f5f9;
+  --surface:      #ffffff;
+  --surface-2:    #f8fafc;
+  --border:       rgba(0,0,0,0.08);
   --border-hover: rgba(139, 92, 246, 0.35);
 
-  --blue:         #8b5cf6;
-  --blue-light:   #a78bfa;
-  --blue-dim:     rgba(139, 92, 246, 0.12);
-  --blue-glow:    rgba(139, 92, 246, 0.25);
+  --blue:         #7c3aed;
+  --blue-light:   #8b5cf6;
+  --blue-dim:     rgba(139, 92, 246, 0.08);
+  --blue-glow:    rgba(139, 92, 246, 0.15);
 
-  --text:         #f0f0f8;
-  --text-2:       #9a9cbe;
-  --text-3:       #5e6080;
+  --text:         #0f172a;
+  --text-2:       #475569;
+  --text-3:       #94a3b8;
 
-  --success:      #10b981;
-  --danger:       #f43f5e;
-  --danger-dim:   rgba(244, 63, 94, 0.1);
+  --success:      #059669;
+  --danger:       #e11d48;
+  --danger-dim:   rgba(225, 29, 72, 0.1);
 
-  --shadow-card:  0 4px 24px rgba(0,0,0,0.4), 0 1px 2px rgba(139,92,246,0.05);
-  --shadow-glow:  0 0 50px rgba(139, 92, 246, 0.15);
+  --shadow-card:  0 4px 20px rgba(0,0,0,0.05), 0 1px 2px rgba(139,92,246,0.03);
+  --shadow-glow:  0 0 40px rgba(139, 92, 246, 0.1);
+}
+
+[data-theme="light"] #login-section { background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 40%, #e2e8f0 100%); }
+[data-theme="light"] .auth-left { background: linear-gradient(160deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%); }
+[data-theme="light"] .auth-right { background: rgba(255, 255, 255, 0.95); border-left: 1px solid rgba(0,0,0,0.05); }
+[data-theme="light"] .auth-backdrop { background: rgba(255, 255, 255, 0.6); }
+[data-theme="light"] .auth-split { box-shadow: 0 30px 80px rgba(0,0,0,0.1), 0 0 100px rgba(139,92,246,0.05); border: 1px solid rgba(0,0,0,0.08); }
+[data-theme="light"] .auth-ring-core {
+  background: radial-gradient(circle at 35% 35%, rgba(167,139,250,0.5), rgba(99,102,241,0.2), rgba(139,92,246,0.05));
+  box-shadow: 0 0 40px rgba(139,92,246,0.2), 0 0 80px rgba(139,92,246,0.1);
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
 html { font-size: 16px; -webkit-font-smoothing: antialiased; }
