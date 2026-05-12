@@ -268,7 +268,7 @@
             <svg class="sun-icon hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             <svg class="moon-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           </button>
-          <div class="user-profile-dropdown" id="logout-btn">
+          <div class="user-profile-dropdown nav-item" data-panel="settings" id="profile-dropdown-btn">
             <div class="user-avatar" id="user-avatar">U</div>
             <span class="user-name" id="sidebar-username">User Name</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -644,6 +644,9 @@
               <input type="password" id="new-password" placeholder="Min. 6 characters" />
             </div>
             <button class="btn-primary" id="change-password-btn">Change Password</button>
+          </div>
+          <div class="card settings-card" style="margin-top: 1rem;">
+            <button class="btn-primary" id="logout-btn" style="background: rgba(244, 63, 94, 0.15); color: #f43f5e; border: 1px solid rgba(244, 63, 94, 0.2); width: 100%;">Sign Out</button>
           </div>
 
         </div>
