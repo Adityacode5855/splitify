@@ -1797,7 +1797,40 @@ input:hover:not(:focus), select:hover:not(:focus) {
 .dash-greeting { font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 1rem; color: var(--text-2); margin-bottom: 0.2rem; }
 .dash-title { font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 0.5rem; letter-spacing: -0.02em; }
 .dash-subtitle { color: var(--text-3); font-size: 0.95rem; }
-.dash-hero-actions { display: flex; gap: 1rem; }
+.dash-hero-actions { display: flex; gap: 1rem; flex-wrap: nowrap; }
+.dash-hero-btn {
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+}
+.dash-hero-btn.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.dash-hero-btn.btn-ghost:hover {
+  background: var(--surface);
+  border-color: var(--text-3);
+  transform: translateY(-2px);
+}
+.dash-hero-btn.btn-primary {
+  background: var(--blue); /* This is the gold color now */
+  color: #000;
+  box-shadow: 0 4px 15px rgba(245, 166, 35, 0.2);
+}
+.dash-hero-btn.btn-primary:hover {
+  background: var(--blue-light);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245, 166, 35, 0.35);
+}
 
 .fin-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 1.5rem; }
 .fin-stat-card {

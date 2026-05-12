@@ -343,14 +343,16 @@ async function logout() {
 }
 
 function initNavigation() {
-  document.querySelectorAll(".nav-item, .mobile-nav-item, .qa-btn, .btn-ghost").forEach(btn => {
+  document.querySelectorAll("[data-panel]").forEach(btn => {
     btn.addEventListener("click", () => {
       const panel = btn.dataset.panel;
       if (panel) switchPanel(panel);
     });
   });
-  $("logout-btn").addEventListener("click", logout);
-  $("mobile-logout-btn").addEventListener("click", logout);
+  const logoutBtn = $("logout-btn");
+  if (logoutBtn) logoutBtn.addEventListener("click", logout);
+  const mobileLogoutBtn = $("mobile-logout-btn");
+  if (mobileLogoutBtn) mobileLogoutBtn.addEventListener("click", logout);
 }
 
 function switchPanel(name) {
