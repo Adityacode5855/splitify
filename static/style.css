@@ -40,29 +40,29 @@
 }
 
 :root[data-theme="light"] {
-  --bg: #070B14;
-  --bg-2: #0D111A;
-  --bg-3: #11141E;
-  --surface: #141824;
-  --surface-2: #1A1F2E;
-  --border: rgba(255,255,255,0.08);
-  --border-hover: rgba(245, 166, 35, 0.35);
+  --bg: #f8fafc;
+  --bg-2: #f1f5f9;
+  --bg-3: #e2e8f0;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --border: rgba(0,0,0,0.06);
+  --border-hover: rgba(245, 166, 35, 0.4);
 
   --blue: #f5a623;
   --blue-light: #fbbf24;
-  --blue-dim: rgba(245, 166, 35, 0.12);
-  --blue-glow: rgba(245, 166, 35, 0.25);
+  --blue-dim: rgba(245, 166, 35, 0.08);
+  --blue-glow: rgba(245, 166, 35, 0.15);
 
   --text:         #0f172a;
   --text-2:       #475569;
   --text-3:       #94a3b8;
 
-  --success:      #059669;
-  --danger:       #e11d48;
-  --danger-dim:   rgba(225, 29, 72, 0.1);
+  --success:      #10b981;
+  --danger:       #f43f5e;
+  --danger-dim:   rgba(244, 63, 94, 0.08);
 
-  --shadow-card:  0 4px 20px rgba(0,0,0,0.05), 0 1px 2px rgba(139,92,246,0.03);
-  --shadow-glow:  0 0 40px rgba(139, 92, 246, 0.1);
+  --shadow-card:  0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-glow:  0 0 40px rgba(245, 166, 35, 0.05);
 }
 
 [data-theme="light"] #login-section { background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 40%, #e2e8f0 100%); }
@@ -2021,3 +2021,68 @@ input:hover:not(:focus), select:hover:not(:focus) {
     grid-template-columns: 1fr; /* Stack on very small screens */
   }
 }
+
+/* ─── LIGHT MODE PREMIUM ADJUSTMENTS ─── */
+[data-theme="light"] body {
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(245, 166, 35, 0.05) 0%, transparent 60%);
+}
+[data-theme="light"] .fintech-sidebar {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+[data-theme="light"] .nav-item:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+[data-theme="light"] .nav-item.active {
+  background: rgba(245, 166, 35, 0.08);
+  color: #f5a623;
+}
+[data-theme="light"] .fin-top-nav {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+[data-theme="light"] .fin-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+}
+[data-theme="light"] .fin-stat-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+[data-theme="light"] .fin-list-item:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+[data-theme="light"] .fin-select, [data-theme="light"] .fin-btn-small {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+}
+[data-theme="light"] .logo-text {
+  color: #0f172a !important;
+}
+[data-theme="light"] .logo-mark svg path:nth-child(1) {
+  fill: #ffffff !important;
+}
+[data-theme="light"] .mobile-nav {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+[data-theme="light"] .mobile-header {
+  background: #ffffff !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+}
+[data-theme="light"] .dash-greeting {
+  color: var(--text-2);
+}
+[data-theme="light"] .dash-title {
+  color: var(--text);
+}
+[data-theme="light"] .dash-hero-btn.btn-ghost {
+  border-color: rgba(0, 0, 0, 0.1);
+  color: var(--text-2);
+}
+[data-theme="light"] .dash-hero-btn.btn-ghost:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
