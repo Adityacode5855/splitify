@@ -66,6 +66,35 @@
 }
 
 [data-theme="light"] #login-section { background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 40%, #e2e8f0 100%); }
+[data-theme="light"] .landing-nav { 
+  background: rgba(255, 255, 255, 0.7); 
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+[data-theme="light"] .nav-link { color: #475569; }
+[data-theme="light"] .nav-link:hover { color: var(--blue); }
+[data-theme="light"] .nav-signup-btn {
+  border-color: rgba(139, 92, 246, 0.2) !important;
+  color: #475569 !important;
+}
+[data-theme="light"] .nav-signup-btn:hover {
+  background: rgba(139, 92, 246, 0.05) !important;
+  color: #8b5cf6 !important;
+}
+[data-theme="light"] .hero-title { text-shadow: 0 0 80px rgba(139, 92, 246, 0.05); }
+[data-theme="light"] .hero-icon-item { background: #ffffff; border-color: rgba(0, 0, 0, 0.05); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); }
+[data-theme="light"] .visual-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+[data-theme="light"] .vc-label { color: #1e293b; }
+[data-theme="light"] .vc-value { color: #64748b; }
+[data-theme="light"] .core-text { text-shadow: none; }
+[data-theme="light"] .ring { border-color: rgba(139, 92, 246, 0.08); }
+[data-theme="light"] .ring-2 { border-color: rgba(139, 92, 246, 0.12); }
+[data-theme="light"] .ring-3 { border-color: rgba(139, 92, 246, 0.16); }
+[data-theme="light"] .ring-4 { border-color: rgba(139, 92, 246, 0.2); }
+
 [data-theme="light"] .auth-left { background: linear-gradient(160deg, #ffffff 0%, #f8fafc 50%, #f1f5f9 100%); }
 [data-theme="light"] .auth-right { background: rgba(255, 255, 255, 0.95); border-left: 1px solid rgba(0,0,0,0.05); }
 [data-theme="light"] .auth-backdrop { background: rgba(255, 255, 255, 0.6); }
