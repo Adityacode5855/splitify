@@ -150,7 +150,7 @@ function initCanvas() {
 }
 
 function initTheme() {
-  const saved = localStorage.getItem("theme") || "light";
+  const saved = localStorage.getItem("theme") || "dark";
   setTheme(saved);
 
   document.querySelectorAll(".theme-toggle-btn").forEach(btn => {
