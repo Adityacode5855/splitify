@@ -74,13 +74,25 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=True)
     profile_image = db.Column(db.String(255), nullable=True)
+    username = db.Column(db.String(120), nullable=True)
+    bio = db.Column(db.Text, nullable=True)
+    currency = db.Column(db.String(10), nullable=True)
+    country = db.Column(db.String(100), nullable=True)
+    phone_number = db.Column(db.String(30), nullable=True)
+    onboarded = db.Column(db.Boolean, default=False, nullable=True)
 
     def to_dict(self):
         return {
             "id": self.id,
             "name": self.name,
             "email": self.email,
-            "profile_image": self.profile_image
+            "profile_image": self.profile_image,
+            "username": self.username,
+            "bio": self.bio,
+            "currency": self.currency,
+            "country": self.country,
+            "phone_number": self.phone_number,
+            "onboarded": self.onboarded
         }
 
 class Group(db.Model):
@@ -190,7 +202,20 @@ def validate_email_password(email, password):
 
 def ensure_user_columns():
     if "sqlite" not in str(db.engine.url).lower():
-        return # Skip for Postgres/other
+        try:
+            db.session.execute(text('ALTER TABLE "user" ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255)'))
+            db.session.execute(text('ALTER TABLE "user" ADD COLUMN IF NOT EXISTS profile_image VARCHAR(255)'))
+            db.session.execute(text('ALTER TABLE "user" ADD COLUMN IF NOT EXISTS username VARCHAR(120)'))
+            db.session.execute(text('ALTER TABLE "user" ADD COLUMN IF NOT EXISTS bio TEXT'))
+            db.session.execute(text('ALTER TABLE "user" ADD COLUMN IF NOT EXISTS currency VARCHAR(10) DEFAULT \'INR\''))
+            db.session.execute(text('ALTER TABLE "user" ADD COLUMN IF NOT EXISTS country VARCHAR(100)'))
+            db.session.execute(text('ALTER TABLE "user" ADD COLUMN IF NOT EXISTS phone_number VARCHAR(30)'))
+            db.session.execute(text('ALTER TABLE "user" ADD COLUMN IF NOT EXISTS onboarded BOOLEAN DEFAULT FALSE'))
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Postgres Migration Error (User): {e}")
+        return
     try:
         inspector_rows = db.session.execute(text("PRAGMA table_info(user)")).fetchall()
         columns = {row[1] for row in inspector_rows}
@@ -199,6 +224,18 @@ def ensure_user_columns():
                 db.session.execute(text("ALTER TABLE user ADD COLUMN password_hash VARCHAR(255)"))
             if "profile_image" not in columns:
                 db.session.execute(text("ALTER TABLE user ADD COLUMN profile_image VARCHAR(255)"))
+            if "username" not in columns:
+                db.session.execute(text("ALTER TABLE user ADD COLUMN username VARCHAR(120)"))
+            if "bio" not in columns:
+                db.session.execute(text("ALTER TABLE user ADD COLUMN bio TEXT"))
+            if "currency" not in columns:
+                db.session.execute(text("ALTER TABLE user ADD COLUMN currency VARCHAR(10) DEFAULT 'INR'"))
+            if "country" not in columns:
+                db.session.execute(text("ALTER TABLE user ADD COLUMN country VARCHAR(100)"))
+            if "phone_number" not in columns:
+                db.session.execute(text("ALTER TABLE user ADD COLUMN phone_number VARCHAR(30)"))
+            if "onboarded" not in columns:
+                db.session.execute(text("ALTER TABLE user ADD COLUMN onboarded BOOLEAN DEFAULT 0"))
             db.session.commit()
     except Exception as e:
         print(f"Migration Error (User): {e}")
@@ -206,7 +243,14 @@ def ensure_user_columns():
 
 def ensure_expense_columns():
     if "sqlite" not in str(db.engine.url).lower():
-        return # Skip for Postgres/other
+        try:
+            db.session.execute(text('ALTER TABLE "expense" ADD COLUMN IF NOT EXISTS split_type VARCHAR(20) DEFAULT \'equal\''))
+            db.session.execute(text('ALTER TABLE "expense" ADD COLUMN IF NOT EXISTS split_data TEXT'))
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Postgres Migration Error (Expense): {e}")
+        return
     try:
         inspector_rows = db.session.execute(text("PRAGMA table_info(expense)")).fetchall()
         columns = {row[1] for row in inspector_rows}
@@ -668,6 +712,48 @@ def get_all_expenses():
             
     all_activity.sort(key=lambda x: x["created_at"], reverse=True)
     return jsonify({"activity": all_activity})
+
+
+@app.route("/api/profile/onboard", methods=["POST"])
+@login_required
+def onboard_profile():
+    data = json_data()
+    name = (data.get("name") or "").strip()
+    username = (data.get("username") or "").strip()
+    bio = (data.get("bio") or "").strip()
+    currency = (data.get("currency") or "INR").strip()
+    country = (data.get("country") or "").strip()
+    phone_number = (data.get("phone_number") or "").strip()
+    profile_image = (data.get("profile_image") or "").strip()
+
+    if not name:
+        return jsonify({"error": "Full Name is required."}), 400
+    if not username:
+        return jsonify({"error": "Username is required."}), 400
+    if not bio:
+        return jsonify({"error": "Bio/About is required."}), 400
+    if not country:
+        return jsonify({"error": "Country is required."}), 400
+
+    # Ensure username is unique if changed/set
+    existing = User.query.filter_by(username=username).first()
+    user = current_user()
+    if existing and existing.id != user.id:
+        return jsonify({"error": "Username is already taken."}), 400
+
+    user.name = name
+    user.username = username
+    user.bio = bio
+    user.currency = currency
+    user.country = country
+    if phone_number:
+        user.phone_number = phone_number
+    if profile_image:
+        user.profile_image = profile_image
+    user.onboarded = True
+
+    db.session.commit()
+    return jsonify(user.to_dict())
 
 
 # --------------------------------

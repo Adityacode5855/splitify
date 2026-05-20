@@ -70,7 +70,17 @@ function getInitials(name = "User") {
 }
 
 function formatCurrency(n) {
-  return "Rs " + Number(n).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const symbolMap = {
+    "INR": "₹",
+    "USD": "$",
+    "EUR": "€",
+    "GBP": "£",
+    "JPY": "¥"
+  };
+  const curr = (state.user && state.user.currency) ? state.user.currency : "INR";
+  const sym = symbolMap[curr] || "₹";
+  const locale = curr === "INR" ? "en-IN" : "en-US";
+  return sym + " " + Number(n).toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function uid() {
@@ -331,7 +341,12 @@ async function enterDashboard(user) {
   renderExpenses();
   initDashboardOverview(); // Initialize analytics
   initSettings(); // Initialize settings data
-  switchPanel("dashboard");
+  
+  if (!user.onboarded) {
+    showOnboardingModal();
+  } else {
+    switchPanel("dashboard");
+  }
 }
 
 async function logout() {
@@ -356,6 +371,11 @@ function initNavigation() {
 }
 
 function switchPanel(name) {
+  if (state.user && !state.user.onboarded) {
+    showToast("Please complete your profile to continue", "warning");
+    showOnboardingModal();
+    return;
+  }
   document.querySelectorAll(".panel").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".nav-item, .mobile-nav-item").forEach(b => {
     b.classList.toggle("active", b.dataset.panel === name);
@@ -1060,6 +1080,222 @@ function renderSplitParticipants(group) {
     
     list.appendChild(row);
   });
+}
+
+// Onboarding Controller Logic
+let onboardingState = {
+  currentStep: 1,
+  totalSteps: 3,
+  initialized: false
+};
+
+function showOnboardingModal() {
+  const modal = $("onboarding-modal");
+  if (!modal) return;
+  modal.classList.remove("hidden");
+  
+  onboardingState.currentStep = 1;
+  updateOnboardingStep();
+  
+  if (state.user) {
+    $("onboard-name").value = state.user.name || "";
+    $("onboard-avatar-preview").textContent = getInitials(state.user.name || "User");
+  }
+  
+  if (!onboardingState.initialized) {
+    initOnboardingHandlers();
+    onboardingState.initialized = true;
+  }
+}
+
+function updateOnboardingStep() {
+  const step = onboardingState.currentStep;
+  
+  for (let i = 1; i <= onboardingState.totalSteps; i++) {
+    const el = $(`onboard-step-${i}`);
+    if (el) {
+      if (i === step) {
+        el.classList.remove("hidden");
+      } else {
+        el.classList.add("hidden");
+      }
+    }
+  }
+  
+  const progressPercent = (step / onboardingState.totalSteps) * 100;
+  $("onboarding-progress").style.width = `${progressPercent}%`;
+  $("current-step-num").textContent = step;
+  
+  const prevBtn = $("onboard-prev-btn");
+  const nextBtn = $("onboard-next-btn");
+  
+  if (step === 1) {
+    prevBtn.classList.add("hidden");
+  } else {
+    prevBtn.classList.remove("hidden");
+  }
+  
+  if (step === onboardingState.totalSteps) {
+    nextBtn.textContent = "Finish Setup";
+  } else {
+    nextBtn.textContent = "Continue";
+  }
+}
+
+function initOnboardingHandlers() {
+  const prevBtn = $("onboard-prev-btn");
+  const nextBtn = $("onboard-next-btn");
+  const uploadTrigger = $("onboard-upload-trigger");
+  const fileInput = $("onboard-profile-upload");
+  const nameInput = $("onboard-name");
+  
+  nameInput.addEventListener("input", () => {
+    if (!state.user || !state.user.profile_image) {
+      $("onboard-avatar-preview").textContent = getInitials(nameInput.value);
+    }
+  });
+  
+  uploadTrigger.addEventListener("click", () => {
+    fileInput.click();
+  });
+  
+  fileInput.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      showToast("File size too large (max 2MB)", "error");
+      return;
+    }
+    const preview = $("onboard-avatar-preview");
+    preview.innerHTML = `<span class="spinner-small"></span>`;
+    
+    const formData = new FormData();
+    formData.append("file", file);
+    
+    try {
+      const data = await apiFetch("/api/profile/upload", {
+        method: "POST",
+        body: formData
+      });
+      state.user.profile_image = data.profile_image;
+      preview.innerHTML = `<img src="${data.profile_image}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">`;
+      showToast("Profile image uploaded!", "success");
+    } catch (err) {
+      showToast(err.message, "error");
+      preview.textContent = getInitials(nameInput.value || "User");
+    }
+  });
+
+  prevBtn.addEventListener("click", () => {
+    if (onboardingState.currentStep > 1) {
+      onboardingState.currentStep--;
+      updateOnboardingStep();
+    }
+  });
+
+  nextBtn.addEventListener("click", async () => {
+    if (await validateOnboardingStep(onboardingState.currentStep)) {
+      if (onboardingState.currentStep < onboardingState.totalSteps) {
+        onboardingState.currentStep++;
+        updateOnboardingStep();
+      } else {
+        await submitOnboarding();
+      }
+    }
+  });
+}
+
+async function validateOnboardingStep(step) {
+  document.querySelectorAll(".field-error").forEach(el => el.textContent = "");
+  
+  if (step === 1) {
+    const name = $("onboard-name").value.trim();
+    const username = $("onboard-username").value.trim();
+    let valid = true;
+    
+    if (name.length < 2) {
+      $("onboard-name-error").textContent = "Full name must be at least 2 characters.";
+      valid = false;
+    }
+    
+    if (username.length < 3) {
+      $("onboard-username-error").textContent = "Username must be at least 3 characters.";
+      valid = false;
+    } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      $("onboard-username-error").textContent = "Username can only contain alphanumeric characters and underscores.";
+      valid = false;
+    }
+    
+    return valid;
+  }
+  
+  if (step === 2) {
+    const bio = $("onboard-bio").value.trim();
+    if (bio.length < 5) {
+      $("onboard-bio-error").textContent = "Please write a short bio (at least 5 characters).";
+      return false;
+    }
+    return true;
+  }
+  
+  if (step === 3) {
+    const country = $("onboard-country").value.trim();
+    if (!country) {
+      $("onboard-country-error").textContent = "Please enter your country.";
+      return false;
+    }
+    return true;
+  }
+  
+  return true;
+}
+
+async function submitOnboarding() {
+  const payload = {
+    name: $("onboard-name").value.trim(),
+    username: $("onboard-username").value.trim(),
+    bio: $("onboard-bio").value.trim(),
+    currency: $("onboard-currency").value,
+    country: $("onboard-country").value.trim(),
+    phone_number: $("onboard-phone").value.trim(),
+    profile_image: (state.user && state.user.profile_image) ? state.user.profile_image : ""
+  };
+  
+  const finishBtn = $("onboard-next-btn");
+  const originalText = finishBtn.textContent;
+  finishBtn.textContent = "Saving...";
+  finishBtn.disabled = true;
+  
+  try {
+    const data = await apiFetch("/api/profile/onboard", {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+    
+    state.user = data;
+    
+    $("onboarding-modal").classList.add("hidden");
+    
+    $("welcome-user-name").textContent = state.user.name;
+    const welcomeOverlay = $("welcome-animation-overlay");
+    welcomeOverlay.classList.remove("hidden");
+    
+    setTimeout(() => {
+      welcomeOverlay.classList.add("hidden");
+      enterDashboard(state.user);
+    }, 3000);
+    
+  } catch (err) {
+    showToast(err.message, "error");
+    if (err.message.includes("username") || err.message.includes("Username")) {
+      onboardingState.currentStep = 1;
+      updateOnboardingStep();
+      $("onboard-username-error").textContent = "Username is already taken. Please try another.";
+    }
+  } finally {
+    finishBtn.textContent = originalText;
+    finishBtn.disabled = false;
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
